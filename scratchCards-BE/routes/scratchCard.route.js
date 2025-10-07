@@ -1,5 +1,6 @@
 import express from "express";
 import ScratchCard from "../models/scratchCard.model.js";
+import mongoose from "mongoose";
 
 const router = express.Router();
 
@@ -49,6 +50,29 @@ router.get('/unused', async (req, res) => {
     res.status(200).json({ success: true, data: unusedCards });
   } catch (error) {
     console.error('Error fetching unused scratch cards:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+//mark scratched 
+router.post('/scratch/:id', async (req, res) => {
+  try {
+    const cardId = req.params.id;
+    const card = await ScratchCard.findById(cardId);
+    if (!mongoose.Types.ObjectId.isValid(cardId)) {
+      return res.status(404).json({ success: false, message: "Scratch card not found" });
+    }
+    if (card.isScratched) {
+      return res.status(400).json({ success: false, message: "Scratch card is already scratched" });
+    }
+    if (card.expiryDate < new Date()) {
+      return res.status(400).json({ success: false, message: "Scratch card has expired" });
+    }
+    card.isScratched = true;
+    await card.save();
+    res.status(200).json({ success: true, data: card });
+  } catch (error) {
+    console.error('Error scratching the card:', error);
     res.status(500).json({ success: false, message: error.message });
   }
 });
