@@ -9,7 +9,8 @@ const scratchCardSchema = new mongoose.Schema({
   },
   discountAmount: {
     type: Number,
-    required: true
+    required: true,
+    min: 0
   },
   expiryDate: {
     type: Date,
