@@ -1,5 +1,8 @@
 import express from "express";
 import User from "../models/user.model.js";
+import Transaction from "../models/transaction.model.js";
+import ScratchCard from "../models/scratchCard.model.js";
+
 
 const router = express.Router();
 
