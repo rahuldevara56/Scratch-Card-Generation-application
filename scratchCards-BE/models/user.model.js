@@ -10,15 +10,18 @@ const userSchema = new mongoose.Schema({
   userEmail: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    match: [/.+\@.+\..+/, 'Please fill a valid email address']
   },
   firstName: {
     type: String,
-    required: true
+    required: true,
+    match: [/^[a-zA-Z]+$/, 'First name must contain only letters']
   },
   lastName: {
     type: String,
-    required: true
+    required: true,
+    match: [/^[a-zA-Z]+$/, 'Last name must contain only letters']
   },
   isActive: {
     type: Boolean,

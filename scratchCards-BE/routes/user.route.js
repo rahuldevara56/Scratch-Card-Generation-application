@@ -1,7 +1,6 @@
 import express from "express";
 import User from "../models/user.model.js";
-import Transaction from "../models/transaction.model.js";
-import ScratchCard from "../models/scratchCard.model.js";
+
 
 
 const router = express.Router();
@@ -13,6 +12,21 @@ router.post('/', async (req, res) => {
   if (!user.firstName || !user.lastName || !user.userEmail) {
     return res.status(400).json({ success: false, message: "firstName, lastName and userEmail are required fields" });
   };
+
+  if (!/.+\@.+\..+/.test(user.userEmail)) {
+    return res.status(400).json({ success: false, message: "Please fill a valid email address" });
+  }
+  if (!/^[a-zA-Z]+$/.test(user.firstName)) {
+    return res.status(400).json({ success: false, message: "First name must contain only letters" });
+  }
+  if (!/^[a-zA-Z]+$/.test(user.lastName)) {
+    return res.status(400).json({ success: false, message: "Last name must contain only letters" });
+  }
+  // Check for existing user with the same email
+  const existingUser = await User.findOne({ userEmail: user.userEmail });
+  if (existingUser) {
+    return res.status(400).json({ success: false, message: "A user with this email already exists" });
+  }
 
   const newUser = new User(user);
   try {
