@@ -1,31 +1,42 @@
-import express from "express";
-import User from "../models/user.model.js";
-
-
+import express from 'express';
+import User from '../models/user.model.js';
 
 const router = express.Router();
 
 // Create a new user
 router.post('/', async (req, res) => {
-  const user = req.body // user will send this data
+  const user = req.body; // user will send this data
 
   if (!user.firstName || !user.lastName || !user.userEmail) {
-    return res.status(400).json({ success: false, message: "firstName, lastName and userEmail are required fields" });
-  };
+    return res.status(400).json({
+      success: false,
+      message: 'firstName, lastName and userEmail are required fields',
+    });
+  }
 
   if (!/.+\@.+\..+/.test(user.userEmail)) {
-    return res.status(400).json({ success: false, message: "Please fill a valid email address" });
+    return res
+      .status(400)
+      .json({ success: false, message: 'Please fill a valid email address' });
   }
   if (!/^[a-zA-Z]+$/.test(user.firstName)) {
-    return res.status(400).json({ success: false, message: "First name must contain only letters" });
+    return res.status(400).json({
+      success: false,
+      message: 'First name must contain only letters',
+    });
   }
   if (!/^[a-zA-Z]+$/.test(user.lastName)) {
-    return res.status(400).json({ success: false, message: "Last name must contain only letters" });
+    return res
+      .status(400)
+      .json({ success: false, message: 'Last name must contain only letters' });
   }
   // Check for existing user with the same email
   const existingUser = await User.findOne({ userEmail: user.userEmail });
   if (existingUser) {
-    return res.status(400).json({ success: false, message: "A user with this email already exists" });
+    return res.status(400).json({
+      success: false,
+      message: 'A user with this email already exists',
+    });
   }
 
   const newUser = new User(user);
@@ -55,7 +66,9 @@ router.get('/:id', async (req, res) => {
   try {
     const user = await User.findOne({ id: userId });
     if (!user) {
-      return res.status(404).json({ success: false, message: 'User not found' });
+      return res
+        .status(404)
+        .json({ success: false, message: 'User not found' });
     }
     res.status(200).json({ success: true, data: user });
   } catch (error) {
@@ -70,15 +83,20 @@ router.put('/:id', async (req, res) => {
   const updateData = req.body;
 
   try {
-    const updatedUser = await User.findOneAndUpdate({ id: userId }, updateData, { new: true })
+    const updatedUser = await User.findOneAndUpdate(
+      { id: userId },
+      updateData,
+      { new: true }
+    );
     if (!updatedUser) {
-      return res.status(404).json({ success: false, message: 'User not found' });
+      return res
+        .status(404)
+        .json({ success: false, message: 'User not found' });
     }
     res.status(200).json({ success: true, data: updatedUser });
   } catch (error) {
     console.error('Error updating user:', error);
     res.status(500).json({ success: false, message: error.message });
-
   }
 });
 
@@ -88,13 +106,16 @@ router.delete('/:id', async (req, res) => {
   try {
     const deletedUser = await User.findOneAndDelete({ id: userId });
     if (!deletedUser) {
-      return res.status(404).json({ success: false, message: 'User not found' });
+      return res
+        .status(404)
+        .json({ success: false, message: 'User not found' });
     }
-    res.status(200).json({ success: true, message: 'User deleted successfully' });
+    res
+      .status(200)
+      .json({ success: true, message: 'User deleted successfully' });
   } catch (error) {
     console.error('Error deleting user:', error);
     res.status(500).json({ success: false, message: error.message });
-
   }
 });
 

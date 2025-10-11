@@ -1,4 +1,3 @@
-import React from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -8,20 +7,46 @@ import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
 import { useForm, Controller } from 'react-hook-form';
 import TextField from '@mui/material/TextField';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+
+const schema = yup.object().shape({
+  userEmail: yup.string().email().required('Email is required'),
+  firstName: yup.string().min(2).max(100).required('First name is required'),
+  lastName: yup.string().min(2).max(100).required('Last name is required'),
+});
 
 export default function CustomizedDialogs({ open, handleClose }) {
   const {
     control,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     defaultValues: {
       firstName: '',
       lastName: '',
+      userEmail: '',
+    },
+    resolver: yupResolver(schema),
+  });
+
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: async (data) => {
+      const response = await axios.post('/api/users', data);
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['users']);
+      reset();
     },
   });
-  const onSubmit = (data) => {
-    console.log('Form Data:', data);
+
+  const onSubmit = async (data) => {
+    mutation.mutate(data);
   };
 
   return (
@@ -32,7 +57,9 @@ export default function CustomizedDialogs({ open, handleClose }) {
       open={open}
     >
       <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-        <Typography variant="h6">Add User</Typography>
+        <Typography variant="h6" fontSize={30}>
+          Add User
+        </Typography>
       </DialogTitle>
       <IconButton
         aria-label="close"
@@ -59,23 +86,16 @@ export default function CustomizedDialogs({ open, handleClose }) {
         >
           {/* Email Field */}
           <Controller
-            name="email"
+            name="userEmail"
             control={control}
-            rules={{
-              required: 'Email is required',
-              pattern: {
-                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                message: 'Enter a valid email address',
-              },
-            }}
             render={({ field }) => (
               <TextField
                 {...field}
                 label="Email"
                 variant="filled"
                 fullWidth
-                error={!!errors.email}
-                helperText={errors.email ? errors.email.message : ''}
+                error={!!errors.userEmail}
+                helperText={errors.userEmail ? errors.userEmail.message : ''}
               />
             )}
           />
@@ -84,14 +104,6 @@ export default function CustomizedDialogs({ open, handleClose }) {
           <Controller
             name="firstName"
             control={control}
-            rules={{
-              required: 'First name is required',
-              minLength: { value: 1, message: 'Minimum 1 characters required' },
-              pattern: {
-                value: /^[A-Za-z]+$/,
-                message: 'Enter a valid first name',
-              },
-            }}
             render={({ field }) => (
               <TextField
                 {...field}
@@ -108,14 +120,6 @@ export default function CustomizedDialogs({ open, handleClose }) {
           <Controller
             name="lastName"
             control={control}
-            rules={{
-              required: 'Last name is required',
-              minLength: { value: 1, message: 'Minimum 1 characters required' },
-              pattern: {
-                value: /^[A-Za-z]+$/,
-                message: 'Enter a valid last name',
-              },
-            }}
             render={({ field }) => (
               <TextField
                 {...field}
