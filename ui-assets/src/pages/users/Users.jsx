@@ -3,25 +3,25 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
-import { useState } from 'react';
 import AddUser from './AddUser';
 import UserTable from './UserTable';
 import Paper from '@mui/material/Paper';
+import { useAtom } from 'jotai';
+import { userModalAtom } from '../../store/userStore';
 
 const Users = () => {
-  const [open, setOpen] = useState(false);
-
+  const [userModal, setUserModal] = useAtom(userModalAtom);
   const handleClickOpen = () => {
-    setOpen(true);
+    setUserModal({ ...userModal, open: true, mode: 'add', userData: null });
   };
   const handleClose = () => {
-    setOpen(false);
+    setUserModal({ ...userModal, open: false });
   };
 
   return (
     <Paper elevation={3} sx={{ margin: 5, padding: 3 }}>
       <Box
-        px={30}
+        px={3}
         py={2}
         sx={{
           display: 'flex',
@@ -33,17 +33,36 @@ const Users = () => {
         <Typography variant="h4" gutterBottom>
           Users
         </Typography>
-        <Button
-          component="label"
-          role={undefined}
-          variant="contained"
-          tabIndex={-1}
-          startIcon={<AddIcon />}
-          onClick={handleClickOpen}
-        >
-          Add User
-        </Button>
-        <AddUser open={open} handleClose={handleClose} />
+        <Box sx={{ display: 'flex', gap: 2 }}>
+          <Button
+            component="label"
+            role={undefined}
+            variant="contained"
+            tabIndex={-1}
+            startIcon={<AddIcon />}
+            onClick={handleClickOpen}
+          >
+            Add User
+          </Button>
+          <AddUser handleClose={handleClose} />
+
+          <Button
+            component="label"
+            role={undefined}
+            variant="contained"
+            tabIndex={-1}
+          >
+            Active
+          </Button>
+          <Button
+            component="label"
+            role={undefined}
+            variant="contained"
+            tabIndex={-1}
+          >
+            InActive
+          </Button>
+        </Box>
       </Box>
 
       <UserTable />

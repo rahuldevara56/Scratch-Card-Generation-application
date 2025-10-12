@@ -4,6 +4,7 @@ import { fetchUsers } from './UsersUtils';
 import { AgGridReact } from 'ag-grid-react';
 import { useState } from 'react';
 import ActionButtons from './ActionButtons';
+import { useMemo } from 'react';
 
 const UserTable = () => {
   const { data } = useQuery({
@@ -24,10 +25,20 @@ const UserTable = () => {
     },
   ]);
 
+  const rowSelection = useMemo(() => {
+    return {
+      mode: 'multiRow',
+    };
+  }, []);
+
   return (
     <>
       <div className="ag-theme-alpine" style={{ height: 400, width: '100%' }}>
-        <AgGridReact rowData={data || []} columnDefs={colDefs} />
+        <AgGridReact
+          rowData={data || []}
+          columnDefs={colDefs}
+          rowSelection={rowSelection}
+        />
       </div>
     </>
   );

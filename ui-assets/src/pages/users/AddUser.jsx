@@ -11,6 +11,9 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { toast } from 'react-hot-toast';
+import { useAtom } from 'jotai';
+import { userModalAtom } from '../../store/userStore';
 
 const schema = yup.object().shape({
   userEmail: yup.string().email().required('Email is required'),
@@ -18,20 +21,20 @@ const schema = yup.object().shape({
   lastName: yup.string().min(2).max(100).required('Last name is required'),
 });
 
-export default function CustomizedDialogs({ open, handleClose }) {
+export default function CustomizedDialogs({ handleClose }) {
+  const [userModal] = useAtom(userModalAtom);
+
   const {
     control,
     handleSubmit,
     reset,
     formState: { errors },
   } = useForm({
-    defaultValues: {
-      firstName: '',
-      lastName: '',
-      userEmail: '',
-    },
+    defaultValues: userModal.userData,
     resolver: yupResolver(schema),
   });
+
+  console.log('userModal data in AddUser:', userModal);
 
   const queryClient = useQueryClient();
   const mutation = useMutation({
@@ -39,9 +42,17 @@ export default function CustomizedDialogs({ open, handleClose }) {
       const response = await axios.post('/api/users', data);
       return response.data;
     },
-    onSuccess: () => {
+    onSuccess: (response) => {
       queryClient.invalidateQueries(['users']);
+      toast.success(
+        `User added successfully: ${response.data.firstName} ${response.data.lastName}`
+      );
       reset();
+    },
+    onError: (error) => {
+      toast.error(
+        error.response?.data?.message || 'Failed to add user. Please try again.'
+      );
     },
   });
 
@@ -54,11 +65,11 @@ export default function CustomizedDialogs({ open, handleClose }) {
       onClose={handleClose}
       aria-labelledby="customized-dialog-title"
       sx={{}}
-      open={open}
+      open={userModal.open}
     >
       <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
         <Typography variant="h6" fontSize={30}>
-          Add User
+          {userModal.mode === 'add' ? 'Add User' : 'Edit User'}
         </Typography>
       </DialogTitle>
       <IconButton
