@@ -10,14 +10,13 @@ import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import './Navbar.css';
 
 const pages = [
-  { display: 'users', path: '/users' },
+  { display: 'users', path: '/' },
   { display: 'generate scratchcards', path: '/generate-scratchcards' },
   { display: 'assign scratchcards', path: '/assign-scratchcards' },
-  { display: 'transactions', path: '/transactions' }
+  { display: 'transactions', path: '/transactions' },
 ];
 
 function Navbar() {
-  
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -41,7 +40,9 @@ function Navbar() {
             SCRATCHCARD GENERATION APPLICATION
           </Typography>
 
-          <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'flex-end' }}>
+          <Box
+            sx={{ flexGrow: 1, display: 'flex', justifyContent: 'flex-end' }}
+          >
             {pages.map((page) => (
               <Button
                 key={page.display}
@@ -60,4 +61,3 @@ function Navbar() {
   );
 }
 export default Navbar;
-              

@@ -6,7 +6,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { useAtom } from 'jotai';
 import { userModalAtom } from '../../store/userStore';
-import { deleteUser } from './utils/deleteUser';
+import { deleteUser } from './utils/UsersUtils';
 
 const ActionButtons = ({ data }) => {
   const [userModal, setUserModal] = useAtom(userModalAtom);
@@ -27,21 +27,7 @@ const ActionButtons = ({ data }) => {
   });
 
   const handleDelete = (id) => {
-    deleteMutate(
-      { id },
-      {
-        onSuccess: (response) => {
-          queryClient.invalidateQueries(['users']);
-          toast.success(response?.message);
-        },
-        onError: (error) => {
-          toast.error(
-            error.response?.data?.message ||
-              'Failed to delete user. Please try again.'
-          );
-        },
-      }
-    );
+    deleteMutate({ id });
   };
 
   const handleEdit = () => {

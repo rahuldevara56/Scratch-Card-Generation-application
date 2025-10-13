@@ -5,8 +5,12 @@ import { AgGridReact } from 'ag-grid-react';
 import { useState } from 'react';
 import ActionButtons from './ActionButtons';
 import { useMemo } from 'react';
+import { useAtom } from 'jotai';
+import { userGridApiAtom } from '../../store/userStore';
 
 const UserTable = () => {
+  const [, setGridApi] = useAtom(userGridApiAtom);
+
   const { data } = useQuery({
     queryKey: ['users'],
     queryFn: fetchUsers,
@@ -32,6 +36,10 @@ const UserTable = () => {
     };
   }, []);
 
+  const onGridReady = (params) => {
+    setGridApi(params.api);
+  };
+
   return (
     <>
       <div className="ag-theme-alpine" style={{ height: 400, width: '100%' }}>
@@ -39,6 +47,7 @@ const UserTable = () => {
           rowData={data || []}
           columnDefs={colDefs}
           rowSelection={rowSelection}
+          onGridReady={onGridReady}
         />
       </div>
     </>

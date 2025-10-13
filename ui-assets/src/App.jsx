@@ -2,7 +2,7 @@ import React from 'react';
 import Navbar from './components/Navbar';
 import { Route, Routes } from 'react-router';
 import Users from './pages/users/Users';
-import GenerateScratchCards from './pages/GenerateScratchCards';
+import GenerateScratchCards from './pages/scratchcards/GenerateScratchCards';
 import AssignScratchCards from './pages/AssignScratchCards';
 import Transactions from './pages/Transactions';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
@@ -14,7 +14,7 @@ function App() {
     <>
       <Navbar />
       <Routes>
-        <Route path="/users" element={<Users />} />
+        <Route path="/" element={<Users />} />
         <Route
           path="/generate-scratchcards"
           element={<GenerateScratchCards />}

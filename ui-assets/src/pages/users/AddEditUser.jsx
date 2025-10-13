@@ -16,8 +16,8 @@ import { toast } from 'react-hot-toast';
 import { useAtom } from 'jotai';
 import { userModalAtom } from '../../store/userStore';
 import { useEffect } from 'react';
-import { postUser } from './utils/postUser';
-import { updateUser } from './utils/updateUser';
+import { postUser } from './utils/UsersUtils';
+import { updateUser } from './utils/UsersUtils';
 
 const schema = yup.object().shape({
   userEmail: yup.string().email().required('Email is required'),
@@ -31,7 +31,7 @@ const defaultValues = {
   lastName: '',
 };
 
-export default function CustomizedDialogs({ handleClose }) {
+export default function AddEditUser({ handleClose }) {
   const [userModal] = useAtom(userModalAtom);
 
   const {

@@ -1,6 +1,6 @@
-import express from "express";
-import ScratchCard from "../models/scratchCard.model.js";
-import mongoose from "mongoose";
+import express from 'express';
+import ScratchCard from '../models/scratchCard.model.js';
+import mongoose from 'mongoose';
 
 const router = express.Router();
 
@@ -9,19 +9,25 @@ router.post('/generate', async (req, res) => {
   const rawCount = req.body.numberOfScratchCards;
   const numberOfScratchCards = parseInt(rawCount, 10);
 
-  if (!Number.isInteger(numberOfScratchCards) || numberOfScratchCards <= 0) {
-    return res.status(400).json({
-      success: false,
-      message: "numberOfScratchCards is required and should be a positive integer"
-    });
-  }
-
   try {
+    if (isNaN(numberOfScratchCards) || numberOfScratchCards <= 0) {
+      return res
+        .status(400)
+        .json({ success: false, message: 'Invalid number of scratch cards' });
+    }
+
+    if (numberOfScratchCards > 10) {
+      return res.status(400).json({
+        success: false,
+        message: 'You can only generate up to 10 scratch cards at a time.',
+      });
+    }
+
     const activeCards = await ScratchCard.find({ isScratched: false });
     if (activeCards.length >= numberOfScratchCards) {
       return res.status(400).json({
         success: false,
-        message: `You already have ${activeCards.length} active scratch cards. Please use them before generating new ones.`
+        message: `You already have ${activeCards.length} active scratch cards. Please use them before generating new ones.`,
       });
     }
 
@@ -31,7 +37,7 @@ router.post('/generate', async (req, res) => {
         // Random discount between 1 and 1000
         discountAmount: Math.floor(Math.random() * 1001),
         // Expiry date set to 5 days from now
-        expiryDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000)
+        expiryDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
       });
     }
 
@@ -46,7 +52,10 @@ router.post('/generate', async (req, res) => {
 // get all unused scratch cards
 router.get('/unused', async (req, res) => {
   try {
-    const unusedCards = await ScratchCard.find({ isScratched: false, isActive: true });
+    const unusedCards = await ScratchCard.find({
+      isScratched: false,
+      isActive: true,
+    });
     res.status(200).json({ success: true, data: unusedCards });
   } catch (error) {
     console.error('Error fetching unused scratch cards:', error);
@@ -54,19 +63,25 @@ router.get('/unused', async (req, res) => {
   }
 });
 
-//mark scratched 
+//mark scratched
 router.post('/scratch/:id', async (req, res) => {
   try {
     const cardId = req.params.id;
     const card = await ScratchCard.findById(cardId);
     if (!mongoose.Types.ObjectId.isValid(cardId)) {
-      return res.status(404).json({ success: false, message: "Scratch card not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: 'Scratch card not found' });
     }
     if (card.isScratched) {
-      return res.status(400).json({ success: false, message: "Scratch card is already scratched" });
+      return res
+        .status(400)
+        .json({ success: false, message: 'Scratch card is already scratched' });
     }
     if (card.expiryDate < new Date()) {
-      return res.status(400).json({ success: false, message: "Scratch card has expired" });
+      return res
+        .status(400)
+        .json({ success: false, message: 'Scratch card has expired' });
     }
     card.isScratched = true;
     await card.save();

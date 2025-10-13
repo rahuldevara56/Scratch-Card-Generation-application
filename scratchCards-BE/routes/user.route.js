@@ -77,6 +77,46 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+// Activate multiple users
+router.put('/activate', async (req, res) => {
+  const { ids } = req.body; // Expecting an array of user IDs
+
+  try {
+    const updatedUsers = await User.updateMany(
+      { id: { $in: ids } },
+      { isActive: true }
+    );
+    res.status(200).json({
+      success: true,
+      message: 'Users activated successfully',
+      data: updatedUsers,
+    });
+  } catch (error) {
+    console.error('Error activating users:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// Deactivate multiple users
+router.put('/deactivate', async (req, res) => {
+  const { ids } = req.body; // Expecting an array of user IDs
+
+  try {
+    const updatedUsers = await User.updateMany(
+      { id: { $in: ids } },
+      { isActive: false }
+    );
+    res.status(200).json({
+      success: true,
+      message: 'Users deactivated successfully',
+      data: updatedUsers,
+    });
+  } catch (error) {
+    console.error('Error deactivating users:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
 // update user by id
 router.put('/:id', async (req, res) => {
   const userId = req.params.id;
