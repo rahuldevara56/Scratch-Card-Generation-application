@@ -3,24 +3,31 @@ import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useAtom } from 'jotai';
 import { userModalAtom } from '../../store/userStore';
+import { deleteUser } from './utils/deleteUser';
 
 const ActionButtons = ({ data }) => {
   const [userModal, setUserModal] = useAtom(userModalAtom);
   const queryClient = useQueryClient();
 
-  const { mutate } = useMutation({
-    mutationFn: async (data) => {
-      const response = await axios.delete(`/api/users/${data.id}`);
-      return response.data;
+  const { mutate: deleteMutate } = useMutation({
+    mutationFn: deleteUser,
+    onSuccess: (response) => {
+      queryClient.invalidateQueries(['users']);
+      toast.success(response?.message);
+    },
+    onError: (error) => {
+      toast.error(
+        error.response?.data?.message ||
+          'Failed to delete user. Please try again.'
+      );
     },
   });
 
   const handleDelete = (id) => {
-    mutate(
+    deleteMutate(
       { id },
       {
         onSuccess: (response) => {
@@ -43,7 +50,7 @@ const ActionButtons = ({ data }) => {
   return (
     <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
       <IconButton aria-label="edit" color="primary">
-        <EditIcon onClick={handleEdit} />
+        <EditIcon onClick={() => handleEdit(data.id)} />
       </IconButton>
       <IconButton aria-label="delete" color="error">
         <DeleteIcon onClick={() => handleDelete(data.id)} />

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { fetchUsers } from './UsersUtils';
+import { fetchUsers } from './utils/UsersUtils';
 import { AgGridReact } from 'ag-grid-react';
 import { useState } from 'react';
 import ActionButtons from './ActionButtons';
@@ -12,6 +12,7 @@ const UserTable = () => {
     queryFn: fetchUsers,
     staleTime: Infinity,
   });
+
   const [colDefs] = useState([
     { field: 'userEmail', flex: 1 },
     { field: 'firstName' },

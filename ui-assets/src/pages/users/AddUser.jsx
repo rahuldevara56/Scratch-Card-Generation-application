@@ -1,25 +1,35 @@
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import IconButton from '@mui/material/IconButton';
+import {
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  IconButton,
+  Typography,
+  TextField,
+} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import Typography from '@mui/material/Typography';
 import { useForm, Controller } from 'react-hook-form';
-import TextField from '@mui/material/TextField';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-hot-toast';
 import { useAtom } from 'jotai';
 import { userModalAtom } from '../../store/userStore';
+import { useEffect } from 'react';
+import { postUser } from './utils/postUser';
+import { updateUser } from './utils/updateUser';
 
 const schema = yup.object().shape({
   userEmail: yup.string().email().required('Email is required'),
   firstName: yup.string().min(2).max(100).required('First name is required'),
   lastName: yup.string().min(2).max(100).required('Last name is required'),
 });
+
+const defaultValues = {
+  userEmail: '',
+  firstName: '',
+  lastName: '',
+};
 
 export default function CustomizedDialogs({ handleClose }) {
   const [userModal] = useAtom(userModalAtom);
@@ -30,18 +40,19 @@ export default function CustomizedDialogs({ handleClose }) {
     reset,
     formState: { errors },
   } = useForm({
-    defaultValues: userModal.userData,
+    defaultValues: userModal.userData ?? defaultValues,
     resolver: yupResolver(schema),
   });
+
+  useEffect(() => {
+    reset(userModal.mode === 'edit' ? userModal.userData : defaultValues);
+  }, [reset, userModal.mode, userModal.userData]);
 
   console.log('userModal data in AddUser:', userModal);
 
   const queryClient = useQueryClient();
   const mutation = useMutation({
-    mutationFn: async (data) => {
-      const response = await axios.post('/api/users', data);
-      return response.data;
-    },
+    mutationFn: postUser,
     onSuccess: (response) => {
       queryClient.invalidateQueries(['users']);
       toast.success(
@@ -56,8 +67,27 @@ export default function CustomizedDialogs({ handleClose }) {
     },
   });
 
+  const updateMutate = useMutation({
+    mutationFn: updateUser,
+    onSuccess: (response) => {
+      queryClient.invalidateQueries(['users']);
+      toast.success(response?.message);
+    },
+    onError: (error) => {
+      toast.error(
+        error.response?.data?.message ||
+          'Failed to update user. Please try again.'
+      );
+    },
+  });
+
   const onSubmit = async (data) => {
-    mutation.mutate(data);
+    if (userModal.mode === 'add') {
+      mutation.mutate(data);
+    } else if (userModal.mode === 'edit') {
+      updateMutate.mutate({ id: userModal.userData.id, ...data });
+    }
+    handleClose();
   };
 
   return (

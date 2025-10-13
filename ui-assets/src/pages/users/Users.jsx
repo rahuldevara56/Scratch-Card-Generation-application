@@ -1,4 +1,3 @@
-import React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
@@ -11,6 +10,7 @@ import { userModalAtom } from '../../store/userStore';
 
 const Users = () => {
   const [userModal, setUserModal] = useAtom(userModalAtom);
+
   const handleClickOpen = () => {
     setUserModal({ ...userModal, open: true, mode: 'add', userData: null });
   };
