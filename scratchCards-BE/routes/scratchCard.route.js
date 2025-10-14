@@ -34,8 +34,8 @@ router.post('/generate', async (req, res) => {
     let cards = [];
     for (let i = 0; i < numberOfScratchCards; i++) {
       cards.push({
-        // Random discount between 1 and 1000
-        discountAmount: Math.floor(Math.random() * 1001),
+        // Random amount between 1 and 1000
+        Amount: Math.floor(Math.random() * 1001),
         // Expiry date set to 5 days from now
         expiryDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
       });
@@ -45,6 +45,17 @@ router.post('/generate', async (req, res) => {
     res.status(201).json({ success: true, data: createdCards });
   } catch (error) {
     console.error('Error generating scratch cards:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// get all scratch cards
+router.get('/', async (req, res) => {
+  try {
+    const allCards = await ScratchCard.find();
+    res.status(200).json({ success: true, data: allCards });
+  } catch (error) {
+    console.error('Error fetching all scratch cards:', error);
     res.status(500).json({ success: false, message: error.message });
   }
 });
