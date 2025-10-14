@@ -17,12 +17,13 @@ export const postTransaction = async (data) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      username: data.username,
+      fullName: data.fullName,
       transactionAmount: data.amount,
     }),
   });
   if (!response.ok) {
-    throw new Error('Failed to create transaction');
+    const errorData = await response.json();
+    throw new Error(errorData.message || 'Failed to create transaction');
   }
   return response.json();
 };
