@@ -31,7 +31,7 @@ const GenerateScratchCards = () => {
 
   const onSubmit = () => {
     mutation.mutate({
-      numberOfScratchCards: parseInt(numberOfScratchCards, 10),
+      numberOfScratchCards: parseInt(numberOfScratchCards),
     });
   };
 

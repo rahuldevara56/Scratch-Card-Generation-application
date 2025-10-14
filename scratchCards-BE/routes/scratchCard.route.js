@@ -16,13 +16,6 @@ router.post('/generate', async (req, res) => {
         .json({ success: false, message: 'Invalid number of scratch cards' });
     }
 
-    if (numberOfScratchCards > 10) {
-      return res.status(400).json({
-        success: false,
-        message: 'You can only generate up to 10 scratch cards at a time.',
-      });
-    }
-
     const activeCards = await ScratchCard.find({ isScratched: false });
     if (activeCards.length >= numberOfScratchCards) {
       return res.status(400).json({
@@ -42,7 +35,13 @@ router.post('/generate', async (req, res) => {
     }
 
     const createdCards = await ScratchCard.insertMany(cards);
-    res.status(201).json({ success: true, data: createdCards });
+    res
+      .status(201)
+      .json({
+        success: true,
+        message: 'Scratch cards generated successfully',
+        data: createdCards,
+      });
   } catch (error) {
     console.error('Error generating scratch cards:', error);
     res.status(500).json({ success: false, message: error.message });

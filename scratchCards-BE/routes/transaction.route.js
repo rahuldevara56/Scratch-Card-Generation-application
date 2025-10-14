@@ -8,18 +8,21 @@ const router = express.Router();
 // create a transaction
 router.post('/', async (req, res) => {
   try {
-    const { userId, transactionAmount } = req.body;
-    if (!userId || transactionAmount == null) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: 'userId and transactionAmount are required',
-        });
+    const { fullName, transactionAmount } = req.body; // Changed from username to fullName
+    if (!fullName || transactionAmount == null) {
+      return res.status(400).json({
+        success: false,
+        message: 'fullName and transactionAmount are required',
+      });
     }
 
-    const user = await User.findOne({ id: userId });
-    if (!user || !user.isActive) {
+    const user = await User.findOne({
+      $expr: {
+        $eq: [{ $concat: ['$firstName', ' ', '$lastName'] }, fullName],
+      },
+      isActive: true, // Ensure active user
+    });
+    if (!user) {
       return res
         .status(404)
         .json({ success: false, message: 'User not found or inactive' });
@@ -57,24 +60,12 @@ router.post('/', async (req, res) => {
   }
 });
 
-// get all transactions
-
-router.get('/', async (req, res) => {
-  try {
-    const transactions = await Transaction.find();
-    res.status(200).json({ success: true, data: transactions });
-  } catch (error) {
-    console.error('Error fetching transactions:', error);
-    res.status(500).json({ success: false, message: error.message });
-  }
-});
-
-//get transactions with optional filtres(dateOfTransaction, userId, transactionAmount)
-
+// Combined GET route for all transactions with optional filters
 router.get('/', async (req, res) => {
   try {
     const { dateOfTransaction, userId, transactionAmount } = req.query;
     let filter = {};
+
     if (dateOfTransaction) {
       const date = new Date(dateOfTransaction);
       const nextDate = new Date(date);
@@ -87,7 +78,36 @@ router.get('/', async (req, res) => {
     if (transactionAmount) {
       filter.transactionAmount = Number(transactionAmount);
     }
-    const transactions = await Transaction.find(filter);
+
+    const transactions = await Transaction.aggregate([
+      {
+        $match: filter,
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'userId',
+          foreignField: 'id',
+          as: 'userDetails',
+        },
+      },
+      {
+        $unwind: '$userDetails',
+      },
+      {
+        $addFields: {
+          fullName: {
+            $concat: ['$userDetails.firstName', ' ', '$userDetails.lastName'],
+          },
+        },
+      },
+      {
+        $project: {
+          userDetails: 0,
+        },
+      },
+    ]);
+
     res.status(200).json({ success: true, data: transactions });
   } catch (error) {
     console.error('Error fetching transactions:', error);
