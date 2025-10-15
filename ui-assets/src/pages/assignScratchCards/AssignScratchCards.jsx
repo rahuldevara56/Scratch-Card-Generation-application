@@ -20,6 +20,7 @@ import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { assignScratchCard, fetchUsers } from './utils/assignScratchCards';
 import { assignModalAtom } from '../../store/userStore';
+import dayjs from 'dayjs';
 
 const AssignScratchCards = () => {
   const { data } = useQuery({
@@ -63,7 +64,11 @@ const AssignScratchCards = () => {
 
   const [colDefs] = useState([
     { field: 'Amount' },
-    { field: 'expiryDate', flex: 1 },
+    {
+      field: 'expiryDate',
+      flex: 1,
+      valueFormatter: (params) => dayjs(params.value).format('DD MMMM YYYY'),
+    },
     { field: 'isActive' },
     {
       colId: 'actions',
@@ -101,7 +106,7 @@ const AssignScratchCards = () => {
         onClose={() => setAssignModal({ ...assignModal, open: false })}
       >
         <DialogTitle>Assign Scratch Card</DialogTitle>
-        <DialogContent>
+        <DialogContent sx={{ minWidth: 400, minHeight: 150 }}>
           <Autocomplete
             disablePortal
             options={users || []}

@@ -1,6 +1,6 @@
 import React from 'react';
 import Navbar from './components/Navbar';
-import { Route, Routes } from 'react-router';
+import { Route, Routes } from 'react-router-dom';
 import Users from './pages/users/Users';
 import GenerateScratchCards from './pages/scratchcards/GenerateScratchCards';
 import AssignScratchCards from './pages/assignScratchCards/AssignScratchCards';

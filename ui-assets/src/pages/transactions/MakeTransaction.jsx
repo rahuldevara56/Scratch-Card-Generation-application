@@ -14,9 +14,11 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { postTransaction } from './utils/FetchTransactions';
 import { toast } from 'react-hot-toast';
+import { useQuery } from '@tanstack/react-query';
+import { fetchUsers } from '../assignScratchCards/utils/assignScratchCards';
+import Autocomplete from '@mui/material/Autocomplete';
 
 const schema = yup.object().shape({
-  fullName: yup.string().required('Full Name is required'),
   amount: yup.number().positive().required('Amount is required'),
 });
 
@@ -27,6 +29,11 @@ export default function MakeTransaction({ open, handleClose }) {
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
+  });
+
+  const { data: users } = useQuery({
+    queryKey: ['users'],
+    queryFn: fetchUsers,
   });
 
   const queryClient = useQueryClient();
@@ -44,7 +51,10 @@ export default function MakeTransaction({ open, handleClose }) {
   });
 
   const onSubmit = (data) => {
-    mutation.mutate(data);
+    mutation.mutate({
+      transactionAmount: data.amount,
+      userId: data.fullName.id,
+    });
   };
 
   return (
@@ -83,13 +93,18 @@ export default function MakeTransaction({ open, handleClose }) {
               name="fullName"
               control={control}
               render={({ field }) => (
-                <TextField
+                <Autocomplete
                   {...field}
-                  label="Full Name"
-                  variant="filled"
-                  fullWidth
-                  error={!!errors.fullName}
-                  helperText={errors.fullName ? errors.fullName.message : ''}
+                  disablePortal
+                  options={users || []}
+                  getOptionLabel={(option) =>
+                    `${option.firstName} ${option.lastName}`
+                  } // Display full name
+                  sx={{ width: 300, mt: 2 }}
+                  onChange={(event, newValue) => field.onChange(newValue)}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Select User" />
+                  )}
                 />
               )}
             />

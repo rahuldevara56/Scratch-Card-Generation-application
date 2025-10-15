@@ -6,17 +6,30 @@ import { Box } from '@mui/system';
 import { useQuery } from '@tanstack/react-query';
 import { fetchTransactions } from './utils/FetchTransactions';
 import TransactionsButtons from './TransactionsButtons';
+import dayjs from 'dayjs';
+import { useAtom } from 'jotai';
+import { transactionDialogAtom } from '../../store/userStore';
 
 export const TransactionsTable = () => {
+  const [transactionDialogState] = useAtom(transactionDialogAtom);
+
+  const { dateOfTransaction, userId, transactionAmount } =
+    transactionDialogState;
+
   const { data } = useQuery({
     queryKey: ['transactions'],
-    queryFn: fetchTransactions,
+    queryFn: () =>
+      fetchTransactions(dateOfTransaction, userId, transactionAmount),
     staleTime: Infinity,
   });
 
   const [colDefs] = useState([
     { field: 'transactionAmount', flex: 1 },
-    { field: 'dateOfTransaction', flex: 1 },
+    {
+      field: 'dateOfTransaction',
+      flex: 1,
+      valueFormatter: (params) => dayjs(params.value).format('DD MMMM YYYY'),
+    },
     { field: 'fullName', flex: 1, headerName: 'User Name' },
   ]);
   return (

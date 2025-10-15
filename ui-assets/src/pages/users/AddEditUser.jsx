@@ -48,8 +48,6 @@ export default function AddEditUser({ handleClose }) {
     reset(userModal.mode === 'edit' ? userModal.userData : defaultValues);
   }, [reset, userModal.mode, userModal.userData]);
 
-  console.log('userModal data in AddUser:', userModal);
-
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: postUser,

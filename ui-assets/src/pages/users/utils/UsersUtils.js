@@ -5,11 +5,6 @@ export const fetchUsers = async () => {
   return response.data.data;
 };
 
-export const deleteUser = async (data) => {
-  const response = await axios.delete(`/api/users/${data.id}`);
-  return response.data;
-};
-
 export const postUser = async (data) => {
   const response = await axios.post('/api/users', data);
   return response.data;
@@ -25,6 +20,11 @@ export const updateUser = async (data) => {
       },
     }
   );
+  return response.data;
+};
+
+export const deleteUser = async (data) => {
+  const response = await axios.delete(`/api/users/${data.id}`);
   return response.data;
 };
 

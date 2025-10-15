@@ -10,4 +10,9 @@ export const assignModalAtom = atom({
   selectedUser: null,
 });
 
-export const transactionDialogAtom = atom(false);
+export const transactionDialogAtom = atom({
+  dateOfTransaction: null,
+  userId: null,
+  transactionAmount: null,
+  open: false,
+});

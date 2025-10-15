@@ -58,12 +58,20 @@ const Users = () => {
   const handleClickActive = () => {
     const selectedNodes = gridApi.getSelectedNodes();
     const selectedData = selectedNodes.map((node) => node.data.id);
+    if (selectedData.length === 0) {
+      toast.error('Please select at least one user to activate.');
+      return;
+    }
     updateActiveMutate.mutate(selectedData);
   };
 
   const handleClickInActive = () => {
     const selectedNodes = gridApi.getSelectedNodes();
     const selectedData = selectedNodes.map((node) => node.data.id);
+    if (selectedData.length === 0) {
+      toast.error('Please select at least one user to deactivate.');
+      return;
+    }
     updateInactiveMutate.mutate(selectedData);
   };
 

@@ -8,24 +8,12 @@ const router = express.Router();
 // create a transaction
 router.post('/', async (req, res) => {
   try {
-    const { fullName, transactionAmount } = req.body; // Changed from username to fullName
-    if (!fullName || transactionAmount == null) {
+    const { userId, transactionAmount } = req.body; // Changed from username to fullName
+    if (!userId || transactionAmount == null) {
       return res.status(400).json({
         success: false,
-        message: 'fullName and transactionAmount are required',
+        message: 'userId and transactionAmount are required',
       });
-    }
-
-    const user = await User.findOne({
-      $expr: {
-        $eq: [{ $concat: ['$firstName', ' ', '$lastName'] }, fullName],
-      },
-      isActive: true, // Ensure active user
-    });
-    if (!user) {
-      return res
-        .status(404)
-        .json({ success: false, message: 'User not found or inactive' });
     }
 
     const card = await ScratchCard.findOne({
@@ -49,7 +37,7 @@ router.post('/', async (req, res) => {
     const created = await Transaction.create({
       dateOfTransaction: new Date(),
       transactionAmount,
-      userId: user.id,
+      userId: userId,
       scratchCardId: card.id,
     });
 
