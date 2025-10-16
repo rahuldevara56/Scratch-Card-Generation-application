@@ -9,7 +9,7 @@ const ActionButton = (params) => {
   const handleAssign = () => {
     setAssignModal({
       open: true,
-      selectedScratchCard: params.data, // Pass the scratch card data
+      selectedScratchCard: params.data,
       selectedUser: null,
     });
   };

@@ -1,5 +1,4 @@
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import AddUser from './AddEditUser';
@@ -87,9 +86,7 @@ const Users = () => {
           alignItems: 'center',
         }}
       >
-        <Typography variant="h4" gutterBottom>
-          Users
-        </Typography>
+        <h1>Users</h1>
         <Box sx={{ display: 'flex', gap: 2 }}>
           <Button
             component="label"

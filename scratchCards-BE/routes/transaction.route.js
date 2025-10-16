@@ -54,7 +54,7 @@ router.get('/', async (req, res) => {
     const { dateOfTransaction, userId, transactionAmount } = req.query;
     let filter = {};
 
-    if (dateOfTransaction) {
+    if (dateOfTransaction && dateOfTransaction !== 'null') {
       const date = new Date(dateOfTransaction);
       const nextDate = new Date(date);
       nextDate.setDate(nextDate.getDate() + 1);

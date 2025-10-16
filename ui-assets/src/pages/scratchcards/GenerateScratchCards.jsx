@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Paper, Typography } from '@mui/material';
+import { Box, Paper } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import { useQueryClient } from '@tanstack/react-query';
 import { useMutation } from '@tanstack/react-query';
@@ -48,9 +48,7 @@ const GenerateScratchCards = () => {
           gap: 5,
         }}
       >
-        <Typography variant="h4" gutterBottom>
-          Generate Scratchcards
-        </Typography>
+        <h1>Generate Scratchcards</h1>
         <TextField
           required
           id="outlined-required"

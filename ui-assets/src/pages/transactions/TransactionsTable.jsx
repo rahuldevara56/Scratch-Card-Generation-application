@@ -4,7 +4,10 @@ import { useState } from 'react';
 import { Paper, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { useQuery } from '@tanstack/react-query';
-import { fetchTransactions } from './utils/FetchTransactions';
+import {
+  fetchFilteredTransactions,
+  fetchTransactions,
+} from './utils/FetchTransactions';
 import TransactionsButtons from './TransactionsButtons';
 import dayjs from 'dayjs';
 import { useAtom } from 'jotai';
@@ -16,10 +19,20 @@ export const TransactionsTable = () => {
   const { dateOfTransaction, userId, transactionAmount } =
     transactionDialogState;
 
+  const hasFilters = dateOfTransaction || userId || transactionAmount;
+
   const { data } = useQuery({
-    queryKey: ['transactions'],
+    queryKey: hasFilters
+      ? ['transactions', dateOfTransaction, userId, transactionAmount]
+      : ['transactions'],
     queryFn: () =>
-      fetchTransactions(dateOfTransaction, userId, transactionAmount),
+      hasFilters
+        ? fetchFilteredTransactions(
+            dateOfTransaction,
+            userId,
+            transactionAmount
+          )
+        : fetchTransactions(),
     staleTime: Infinity,
   });
 
@@ -35,16 +48,14 @@ export const TransactionsTable = () => {
   return (
     <>
       <Paper elevation={3} sx={{ margin: 5, padding: 3 }}>
-        <Typography variant="h4" color="initial">
-          Transactions
-        </Typography>
+        <h1>Transactions</h1>
         <TransactionsButtons />
         <Box
           px={3}
           py={2}
           sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
         >
-          <h2>Transaction History</h2>
+          <h1>Transaction History</h1>
           <div
             className="ag-theme-alpine"
             style={{ height: 400, width: '100%' }}

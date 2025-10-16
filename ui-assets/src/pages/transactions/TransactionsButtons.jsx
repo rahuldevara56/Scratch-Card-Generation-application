@@ -1,6 +1,4 @@
-import React from 'react';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import TextField from '@mui/material/TextField';
@@ -14,34 +12,18 @@ import { useQuery } from '@tanstack/react-query';
 import { fetchUsers } from '../assignScratchCards/utils/assignScratchCards';
 import Autocomplete from '@mui/material/Autocomplete';
 import { useForm, Controller } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-
-const schema = yup.object().shape({
-  transactionAmount: yup
-    .number()
-    .min(1, 'Amount must be positive')
-    .required('Amount is required'),
-  transactionDate: yup.date().required('Date is required'),
-  user: yup.object().required('User is required'),
-});
 
 const TransactionsButtons = () => {
   const [transactionDialogState, setTransactionDialogState] = useAtom(
     transactionDialogAtom
   );
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
+  const { control, handleSubmit, reset } = useForm({
     defaultValues: {
       transactionAmount: '',
       transactionDate: null,
       user: null,
     },
-    resolver: yupResolver(schema),
   });
 
   const { data: users } = useQuery({
@@ -74,18 +56,29 @@ const TransactionsButtons = () => {
     });
   };
 
+  const handleClearFilters = () => {
+    reset();
+    setTransactionDialogState({
+      ...transactionDialogState,
+      dateOfTransaction: null,
+      userId: null,
+      transactionAmount: null,
+    });
+  };
+
   return (
     <div>
       <>
         <Box px={3} py={4}>
           <form
             onSubmit={handleSubmit(onSubmit)}
-            sx={{
+            style={{
               display: 'flex',
-              gap: 2,
+              gap: 16,
               alignItems: 'center',
               justifyContent: 'center',
               flexDirection: 'row',
+              flexWrap: 'wrap',
             }}
           >
             <Controller
@@ -98,11 +91,9 @@ const TransactionsButtons = () => {
                   options={users || []}
                   getOptionLabel={(option) =>
                     `${option.firstName} ${option.lastName}`
-                  } // Display full name
-                  sx={{ width: 300, mt: 2 }}
-                  error={!!errors.user}
-                  helperText={errors.user ? errors.user.message : ''}
-                  onChange={(event, newValue) => field.onChange(newValue)}
+                  }
+                  sx={{ width: 250 }}
+                  onChange={(_event, newValue) => field.onChange(newValue)}
                   renderInput={(params) => (
                     <TextField {...params} label="Select User" />
                   )}
@@ -117,19 +108,11 @@ const TransactionsButtons = () => {
                 <TextField
                   {...field}
                   variant="outlined"
-                  required
-                  id="outlined-required"
                   label="Transaction Amount"
                   type="number"
                   placeholder="transactionAmount"
-                  sx={{ width: '100%', maxWidth: 250, height: 48 }}
-                  error={!!errors.transactionAmount}
-                  helperText={
-                    errors.transactionAmount
-                      ? errors.transactionAmount.message
-                      : ''
-                  }
                   inputProps={{ min: 1 }}
+                  sx={{ width: 250 }}
                 />
               )}
             />
@@ -139,19 +122,11 @@ const TransactionsButtons = () => {
               control={control}
               render={({ field }) => (
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
-                    <DatePicker
-                      {...field}
-                      label="Transaction Date"
-                      sx={{ width: '100%' }}
-                      error={!!errors.transactionDate}
-                      helperText={
-                        errors.transactionDate
-                          ? errors.transactionDate.message
-                          : ''
-                      }
-                    />
-                  </DemoContainer>
+                  <DatePicker
+                    {...field}
+                    label="Transaction Date"
+                    sx={{ width: 250 }}
+                  />
                 </LocalizationProvider>
               )}
             />
@@ -159,26 +134,27 @@ const TransactionsButtons = () => {
             <Button
               variant="contained"
               color="success"
-              sx={{
-                height: 50,
-                width: 48,
-                minWidth: 48,
-                padding: 0,
-                borderRadius: 1,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginTop: 1,
-              }}
               type="submit"
+              sx={{ height: 53 }}
             >
               <SearchIcon />
             </Button>
 
             <Button
+              variant="outlined"
+              color="secondary"
+              onClick={handleClearFilters}
+              sx={{ height: 56, borderColor: 'grey.500', color: 'grey.700' }}
+            >
+              Clear Filters
+            </Button>
+          </form>
+
+          <Box mt={4} sx={{ textAlign: 'center' }}>
+            <Button
               variant="contained"
               color="primary"
-              sx={{ height: 50 }}
+              sx={{ height: 56 }}
               onClick={handleClickOpen}
             >
               Make Transaction
@@ -187,7 +163,7 @@ const TransactionsButtons = () => {
               open={transactionDialogState.open}
               handleClose={handleClose}
             />
-          </form>
+          </Box>
         </Box>
       </>
     </div>

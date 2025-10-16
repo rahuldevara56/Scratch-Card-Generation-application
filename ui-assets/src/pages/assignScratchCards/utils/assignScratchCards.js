@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-let data = null; // Replace with actual scratch card data when integrating
+let data = null;
 
 export const fetchScratchCards = async () => {
   const response = await axios.get('/api/scratchcards');

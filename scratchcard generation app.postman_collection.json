@@ -1,0 +1,412 @@
+{
+	"info": {
+		"_postman_id": "0b786493-31b5-490f-ba25-fd79c1713ac4",
+		"name": "scratchcard generation app",
+		"description": "This Postman collection contains all REST APIs for the Scratch Card Generation Application.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "49056686",
+		"_collection_link": "https://devararahul56-3358667.postman.co/workspace/21e17778-b507-47b7-86d0-b19db660ef2f/collection/49056686-0b786493-31b5-490f-ba25-fd79c1713ac4?action=share&source=collection_link&creator=49056686"
+	},
+	"item": [
+		{
+			"name": "number of scratchcards",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/scratchcards/generate\n",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"scratchcards",
+						"generate\n"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "number of scratchcards successful",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"numberOfScratchCards\" : 2\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/scratchcards/generate",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"scratchcards",
+								"generate"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "549"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"225-G2t99RxMzSaGYeL4I172HMU8FX4\""
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 07 Oct 2025 17:16:40 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"success\": true,\n    \"data\": [\n        {\n            \"discountAmount\": 405,\n            \"expiryDate\": \"2025-10-12T17:16:40.514Z\",\n            \"isScratched\": false,\n            \"isActive\": true,\n            \"_id\": \"68e54af83ccb8af94e76897a\",\n            \"id\": \"3eecc543-e1f6-44f4-b311-4366cf6eb691\",\n            \"__v\": 0,\n            \"createdAt\": \"2025-10-07T17:16:40.516Z\",\n            \"updatedAt\": \"2025-10-07T17:16:40.516Z\"\n        },\n        {\n            \"discountAmount\": 930,\n            \"expiryDate\": \"2025-10-12T17:16:40.514Z\",\n            \"isScratched\": false,\n            \"isActive\": true,\n            \"_id\": \"68e54af83ccb8af94e76897b\",\n            \"id\": \"c2c3c70a-1992-489e-96ef-ec262ee3294b\",\n            \"__v\": 0,\n            \"createdAt\": \"2025-10-07T17:16:40.516Z\",\n            \"updatedAt\": \"2025-10-07T17:16:40.516Z\"\n        }\n    ]\n}"
+				},
+				{
+					"name": "not successfull",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"numberOfScratchCards\" : 0\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/scratchcards/generate",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"scratchcards",
+								"generate"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "95"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"5f-mbxZqkQrjmHIZsZ4KuBq/W3b29A\""
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 07 Oct 2025 17:17:24 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"success\": false,\n    \"message\": \"numberOfScratchCards is required and should be a positive integer\"\n}"
+				}
+			]
+		},
+		{
+			"name": "get unused scratchcards",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": [
+				{
+					"name": "unused scratchcards",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/scratchcards/unused",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"scratchcards",
+								"unused"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "811"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"32b-nEn4/q4Ctx9fzhFIFu//j7axj5Y\""
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 07 Oct 2025 17:18:04 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"success\": true,\n    \"data\": [\n        {\n            \"_id\": \"68e541c6d403a3178d962927\",\n            \"discountAmount\": 322,\n            \"expiryDate\": \"2025-10-12T16:37:26.388Z\",\n            \"isScratched\": false,\n            \"isActive\": true,\n            \"id\": \"22cbab10-5c6e-42c1-9edc-4f7698b676e7\",\n            \"__v\": 0,\n            \"createdAt\": \"2025-10-07T16:37:26.394Z\",\n            \"updatedAt\": \"2025-10-07T16:37:26.394Z\"\n        },\n        {\n            \"_id\": \"68e54af83ccb8af94e76897a\",\n            \"discountAmount\": 405,\n            \"expiryDate\": \"2025-10-12T17:16:40.514Z\",\n            \"isScratched\": false,\n            \"isActive\": true,\n            \"id\": \"3eecc543-e1f6-44f4-b311-4366cf6eb691\",\n            \"__v\": 0,\n            \"createdAt\": \"2025-10-07T17:16:40.516Z\",\n            \"updatedAt\": \"2025-10-07T17:16:40.516Z\"\n        },\n        {\n            \"_id\": \"68e54af83ccb8af94e76897b\",\n            \"discountAmount\": 930,\n            \"expiryDate\": \"2025-10-12T17:16:40.514Z\",\n            \"isScratched\": false,\n            \"isActive\": true,\n            \"id\": \"c2c3c70a-1992-489e-96ef-ec262ee3294b\",\n            \"__v\": 0,\n            \"createdAt\": \"2025-10-07T17:16:40.516Z\",\n            \"updatedAt\": \"2025-10-07T17:16:40.516Z\"\n        }\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "mark scratched",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/scratchcards/scratch/68e541c6d403a3178d962927",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"scratchcards",
+						"scratch",
+						"68e541c6d403a3178d962927"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "already scratched",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/scratchcards/scratch/68e541c6d403a3178d962926",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"scratchcards",
+								"scratch",
+								"68e541c6d403a3178d962926"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "63"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"3f-9O43w36kaNnou/0akx17fBZKas0\""
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 07 Oct 2025 17:18:49 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"success\": false,\n    \"message\": \"Scratch card is already scratched\"\n}"
+				},
+				{
+					"name": "marked as scratched",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/scratchcards/scratch/68e541c6d403a3178d962927",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"scratchcards",
+								"scratch",
+								"68e541c6d403a3178d962927"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "284"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"11c-/o9Pn+S7NzJ+cYW0A+yt4T001sg\""
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 07 Oct 2025 17:19:45 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"success\": true,\n    \"data\": {\n        \"_id\": \"68e541c6d403a3178d962927\",\n        \"discountAmount\": 322,\n        \"expiryDate\": \"2025-10-12T16:37:26.388Z\",\n        \"isScratched\": true,\n        \"isActive\": true,\n        \"id\": \"22cbab10-5c6e-42c1-9edc-4f7698b676e7\",\n        \"__v\": 0,\n        \"createdAt\": \"2025-10-07T16:37:26.394Z\",\n        \"updatedAt\": \"2025-10-07T17:19:45.633Z\"\n    }\n}"
+				}
+			]
+		}
+	]
+}

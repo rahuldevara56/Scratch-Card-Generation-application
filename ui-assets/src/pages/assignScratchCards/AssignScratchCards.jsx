@@ -11,7 +11,7 @@ import {
   DialogActions,
   Button,
 } from '@mui/material';
-import ActionButton from './actionButton';
+import ActionButton from './ActionButton';
 import { Box } from '@mui/system';
 import { useAtom } from 'jotai';
 import TextField from '@mui/material/TextField';
@@ -87,7 +87,7 @@ const AssignScratchCards = () => {
           py={2}
           sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
         >
-          <h2>Assign ScratchCards</h2>
+          <h1>Assign ScratchCards</h1>
           <div
             className="ag-theme-alpine"
             style={{ height: 400, width: '100%' }}
