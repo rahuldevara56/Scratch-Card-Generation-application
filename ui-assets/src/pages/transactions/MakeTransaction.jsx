@@ -100,7 +100,7 @@ export default function MakeTransaction({ open, handleClose }) {
                   getOptionLabel={(option) =>
                     `${option.firstName} ${option.lastName}`
                   } // Display full name
-                  sx={{ width: 300, mt: 2 }}
+                  sx={{ width: 357, mt: 2 }}
                   onChange={(event, newValue) => field.onChange(newValue)}
                   renderInput={(params) => (
                     <TextField {...params} label="Select User" />
