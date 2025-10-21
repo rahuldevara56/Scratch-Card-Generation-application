@@ -110,7 +110,3 @@ describe("userStore atoms", () => {
     });
   });
 });
-
-// Note: The above tests focus on the default values and basic set/get functionality of the atoms in userStore.
-
-//rahul
