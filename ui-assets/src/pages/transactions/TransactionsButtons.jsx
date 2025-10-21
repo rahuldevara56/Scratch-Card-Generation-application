@@ -1,17 +1,17 @@
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import SearchIcon from '@mui/icons-material/Search';
-import { Box } from '@mui/system';
-import { useAtom } from 'jotai';
-import { transactionDialogAtom } from '../../store/userStore';
-import MakeTransaction from './MakeTransaction';
-import { useQuery } from '@tanstack/react-query';
-import { fetchUsers } from '../assignScratchCards/utils/assignScratchCards';
-import Autocomplete from '@mui/material/Autocomplete';
-import { useForm, Controller } from 'react-hook-form';
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import SearchIcon from "@mui/icons-material/Search";
+import { Box } from "@mui/system";
+import { useAtom } from "jotai";
+import { transactionDialogAtom } from "../../store/common.store";
+import MakeTransaction from "./MakeTransaction";
+import { useQuery } from "@tanstack/react-query";
+import { fetchUsers } from "../assignScratchCards/utils/assignScratchCards";
+import Autocomplete from "@mui/material/Autocomplete";
+import { useForm, Controller } from "react-hook-form";
 
 const TransactionsButtons = () => {
   const [transactionDialogState, setTransactionDialogState] = useAtom(
@@ -20,14 +20,14 @@ const TransactionsButtons = () => {
 
   const { control, handleSubmit, reset } = useForm({
     defaultValues: {
-      transactionAmount: '',
+      transactionAmount: "",
       transactionDate: null,
       user: null,
     },
   });
 
   const { data: users } = useQuery({
-    queryKey: ['users'],
+    queryKey: ["users"],
     queryFn: fetchUsers,
   });
 
@@ -73,12 +73,12 @@ const TransactionsButtons = () => {
           <form
             onSubmit={handleSubmit(onSubmit)}
             style={{
-              display: 'flex',
+              display: "flex",
               gap: 16,
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexDirection: 'row',
-              flexWrap: 'wrap',
+              alignItems: "center",
+              justifyContent: "center",
+              flexDirection: "row",
+              flexWrap: "wrap",
             }}
           >
             <Controller
@@ -144,13 +144,13 @@ const TransactionsButtons = () => {
               variant="outlined"
               color="secondary"
               onClick={handleClearFilters}
-              sx={{ height: 56, borderColor: 'grey.500', color: 'grey.700' }}
+              sx={{ height: 56, borderColor: "grey.500", color: "grey.700" }}
             >
               Clear Filters
             </Button>
           </form>
 
-          <Box mt={4} sx={{ textAlign: 'center' }}>
+          <Box mt={4} sx={{ textAlign: "center" }}>
             <Button
               variant="contained"
               color="primary"

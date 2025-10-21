@@ -1,12 +1,12 @@
-import React from 'react';
-import IconButton from '@mui/material/IconButton';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
-import { useAtom } from 'jotai';
-import { userModalAtom } from '../../store/userStore';
-import { deleteUser } from './utils/UsersUtils';
+import React from "react";
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+import { useAtom } from "jotai";
+import { userModalAtom } from "../../store/common.store";
+import { deleteUser } from "./utils/UsersUtils";
 
 const ActionButtons = ({ data }) => {
   const [userModal, setUserModal] = useAtom(userModalAtom);
@@ -15,13 +15,13 @@ const ActionButtons = ({ data }) => {
   const { mutate: deleteMutate } = useMutation({
     mutationFn: deleteUser,
     onSuccess: (response) => {
-      queryClient.invalidateQueries(['users']);
+      queryClient.invalidateQueries(["users"]);
       toast.success(response?.message);
     },
     onError: (error) => {
       toast.error(
         error.response?.data?.message ||
-          'Failed to delete user. Please try again.'
+          "Failed to delete user. Please try again."
       );
     },
   });
@@ -31,10 +31,10 @@ const ActionButtons = ({ data }) => {
   };
 
   const handleEdit = () => {
-    setUserModal({ ...userModal, open: true, mode: 'edit', userData: data });
+    setUserModal({ ...userModal, open: true, mode: "edit", userData: data });
   };
   return (
-    <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+    <div style={{ display: "flex", gap: "10px", justifyContent: "center" }}>
       <IconButton aria-label="edit" color="primary">
         <EditIcon onClick={() => handleEdit(data.id)} />
       </IconButton>

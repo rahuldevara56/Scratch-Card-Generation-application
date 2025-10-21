@@ -1,12 +1,12 @@
-import React from 'react';
-import { Box, Paper } from '@mui/material';
-import TextField from '@mui/material/TextField';
-import { useQueryClient } from '@tanstack/react-query';
-import { useMutation } from '@tanstack/react-query';
-import { toast } from 'react-hot-toast';
-import { postScratchcards } from './utils/postScratchcards';
-import Button from '@mui/material/Button';
-import { useState } from 'react';
+import React from "react";
+import { Box, Paper } from "@mui/material";
+import TextField from "@mui/material/TextField";
+import { useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "react-hot-toast";
+import { postScratchcards } from "./utils/postScratchcards";
+import Button from "@mui/material/Button";
+import { useState } from "react";
 
 const GenerateScratchCards = () => {
   const [numberOfScratchCards, setNumberOfScratchCards] = useState(1);
@@ -16,15 +16,13 @@ const GenerateScratchCards = () => {
   const mutation = useMutation({
     mutationFn: postScratchcards,
     onSuccess: (response) => {
-      queryClient.invalidateQueries(['users']);
-      toast.success(
-        `Scratchcards created successfully: ${response.data.count}`
-      );
+      queryClient.invalidateQueries(["users"]);
+      toast.success(response.message || "Scratchcards created successfully.");
     },
     onError: (error) => {
       toast.error(
         error.response?.data?.message ||
-          'Failed to create scratchcards. Please try again.'
+          "Failed to create scratchcards. Please try again."
       );
     },
   });
@@ -41,10 +39,10 @@ const GenerateScratchCards = () => {
         px={3}
         py={2}
         sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-          alignItems: 'center',
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          alignItems: "center",
           gap: 5,
         }}
       >

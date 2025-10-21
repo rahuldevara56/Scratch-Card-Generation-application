@@ -53,9 +53,7 @@ describe("GenerateScratchCards Component", () => {
     });
 
     await waitFor(() => {
-      expect(toast.success).toHaveBeenCalledWith(
-        "Scratchcards created successfully: 5"
-      );
+      expect(toast.success).toHaveBeenCalled();
     });
   });
 

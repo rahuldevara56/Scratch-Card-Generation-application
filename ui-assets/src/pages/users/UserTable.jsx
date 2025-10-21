@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchUsers } from "../../api/userApi";
+import { fetchUsers } from "./utils/usersUtils";
 import { AgGridReact } from "ag-grid-react";
 import { useState } from "react";
 import ActionButtons from "./ActionButtons";
 import { useMemo } from "react";
 import { useAtom } from "jotai";
-import { userGridApiAtom } from "../../store/userStore";
+import { userGridApiAtom } from "../../store/common.store";
 
 const UserTable = () => {
   const [, setGridApi] = useAtom(userGridApiAtom);

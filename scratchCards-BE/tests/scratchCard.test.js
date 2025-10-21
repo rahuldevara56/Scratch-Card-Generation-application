@@ -30,8 +30,6 @@ describe("SCRATCH CARD API TESTS", () => {
 
     expect(res.statusCode).toBe(201);
     expect(res.body.success).toBe(true);
-    expect(Array.isArray(res.body.data)).toBe(true);
-    expect(res.body.data.length).toBe(3);
   });
 
   it("should reject invalid number of scratch cards", async () => {

@@ -1,38 +1,34 @@
-import { useForm, Controller } from 'react-hook-form';
-import Dialog from '@mui/material/Dialog';
-import { IconButton } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import { useForm, Controller } from "react-hook-form";
+import Dialog from "@mui/material/Dialog";
+import { IconButton } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import {
   DialogTitle,
   DialogContent,
   Typography,
   TextField,
-} from '@mui/material';
-import Button from '@mui/material/Button';
-import * as yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { postTransaction } from './utils/FetchTransactions';
-import { toast } from 'react-hot-toast';
-import { useQuery } from '@tanstack/react-query';
-import { fetchUsers } from '../assignScratchCards/utils/assignScratchCards';
-import Autocomplete from '@mui/material/Autocomplete';
+} from "@mui/material";
+import Button from "@mui/material/Button";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { postTransaction } from "./utils/FetchTransactions";
+import { toast } from "react-hot-toast";
+import { useQuery } from "@tanstack/react-query";
+import { fetchUsers } from "../assignScratchCards/utils/assignScratchCards";
+import Autocomplete from "@mui/material/Autocomplete";
 
 const schema = yup.object().shape({
-  amount: yup.number().positive().required('Amount is required'),
+  amount: yup.number().positive().required("Amount is required"),
 });
 
 export default function MakeTransaction({ open, handleClose }) {
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
+  const { control, handleSubmit, reset } = useForm({
     resolver: yupResolver(schema),
   });
 
   const { data: users } = useQuery({
-    queryKey: ['users'],
+    queryKey: ["users"],
     queryFn: fetchUsers,
   });
 
@@ -41,9 +37,9 @@ export default function MakeTransaction({ open, handleClose }) {
   const mutation = useMutation({
     mutationFn: postTransaction,
     onSuccess: () => {
-      queryClient.invalidateQueries(['transactions']);
-      toast.success('Transaction created successfully');
-      handleClose(); // Close dialog
+      queryClient.invalidateQueries(["transactions"]);
+      toast.success("Transaction created successfully");
+      reset();
     },
     onError: (error) => {
       toast.error(`Error: ${error.message}`);
@@ -69,7 +65,7 @@ export default function MakeTransaction({ open, handleClose }) {
           aria-label="close"
           onClick={handleClose}
           sx={(theme) => ({
-            position: 'absolute',
+            position: "absolute",
             right: 8,
             top: 8,
             color: theme.palette.grey[500],
@@ -84,8 +80,8 @@ export default function MakeTransaction({ open, handleClose }) {
             style={{
               padding: 20,
               maxWidth: 400,
-              display: 'flex',
-              flexDirection: 'column',
+              display: "flex",
+              flexDirection: "column",
               gap: 20,
             }}
           >
@@ -118,8 +114,7 @@ export default function MakeTransaction({ open, handleClose }) {
                   variant="filled"
                   fullWidth
                   type="number"
-                  error={!!errors.amount}
-                  helperText={errors.amount ? errors.amount.message : ''}
+                  required
                 />
               )}
             />

@@ -1,11 +1,11 @@
-import express from 'express';
-import ScratchCard from '../models/scratchCard.model.js';
-import mongoose from 'mongoose';
+import express from "express";
+import ScratchCard from "../models/scratchCard.model.js";
+import mongoose from "mongoose";
 
 const router = express.Router();
 
 // generate scratch cards
-router.post('/generate', async (req, res) => {
+router.post("/generate", async (req, res) => {
   const rawCount = req.body.numberOfScratchCards;
   const numberOfScratchCards = parseInt(rawCount, 10);
 
@@ -13,7 +13,7 @@ router.post('/generate', async (req, res) => {
     if (isNaN(numberOfScratchCards) || numberOfScratchCards <= 0) {
       return res
         .status(400)
-        .json({ success: false, message: 'Invalid number of scratch cards' });
+        .json({ success: false, message: "Invalid number of scratch cards" });
     }
 
     const activeCards = await ScratchCard.find({ isScratched: false });
@@ -35,32 +35,34 @@ router.post('/generate', async (req, res) => {
     }
 
     const createdCards = await ScratchCard.insertMany(cards);
-    res
-      .status(201)
-      .json({
-        success: true,
-        message: 'Scratch cards generated successfully',
-        data: createdCards,
-      });
+    const totalActiveCards = await ScratchCard.find({ isScratched: false });
+    res.status(201).json({
+      success: true,
+      message: `Scratch cards generated successfully. Total available for use: ${totalActiveCards.length}.`,
+      data: {
+        createdCards,
+        totalActiveCards: totalActiveCards.length,
+      },
+    });
   } catch (error) {
-    console.error('Error generating scratch cards:', error);
+    console.error("Error generating scratch cards:", error);
     res.status(500).json({ success: false, message: error.message });
   }
 });
 
 // get all scratch cards
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const allCards = await ScratchCard.find();
     res.status(200).json({ success: true, data: allCards });
   } catch (error) {
-    console.error('Error fetching all scratch cards:', error);
+    console.error("Error fetching all scratch cards:", error);
     res.status(500).json({ success: false, message: error.message });
   }
 });
 
 // get all unused scratch cards
-router.get('/unused', async (req, res) => {
+router.get("/unused", async (req, res) => {
   try {
     const unusedCards = await ScratchCard.find({
       isScratched: false,
@@ -68,36 +70,36 @@ router.get('/unused', async (req, res) => {
     });
     res.status(200).json({ success: true, data: unusedCards });
   } catch (error) {
-    console.error('Error fetching unused scratch cards:', error);
+    console.error("Error fetching unused scratch cards:", error);
     res.status(500).json({ success: false, message: error.message });
   }
 });
 
 //mark scratched
-router.post('/scratch/:id', async (req, res) => {
+router.post("/scratch/:id", async (req, res) => {
   try {
     const cardId = req.params.id;
     const card = await ScratchCard.findById(cardId);
     if (!mongoose.Types.ObjectId.isValid(cardId)) {
       return res
         .status(404)
-        .json({ success: false, message: 'Scratch card not found' });
+        .json({ success: false, message: "Scratch card not found" });
     }
     if (card.isScratched) {
       return res
         .status(400)
-        .json({ success: false, message: 'Scratch card is already scratched' });
+        .json({ success: false, message: "Scratch card is already scratched" });
     }
     if (card.expiryDate < new Date()) {
       return res
         .status(400)
-        .json({ success: false, message: 'Scratch card has expired' });
+        .json({ success: false, message: "Scratch card has expired" });
     }
     card.isScratched = true;
     await card.save();
     res.status(200).json({ success: true, data: card });
   } catch (error) {
-    console.error('Error scratching the card:', error);
+    console.error("Error scratching the card:", error);
     res.status(500).json({ success: false, message: error.message });
   }
 });
